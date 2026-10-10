@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberSafe Pro — Stay Smart. Stay Secure.</title>
+    <meta name="description" content="CyberSafe is an advanced educational website designed to spread awareness about cybersecurity, real-world incidents, and safe internet practices.">
+    <style>
+        /* ==========================================================================
+           CSS Variables & Reset & Theme
+           ========================================================================== */
+        :root {
+            /* Dark Theme (Default Cyberpunk/Enterprise) */
+            --bg-primary: #050505;
+            --bg-secondary: #0a0a0a;
+            --bg-glass: rgba(20, 20, 20, 0.6);
+            --bg-card: rgba(255, 255, 255, 0.02);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --border-glow: rgba(0, 240, 255, 0.3);
+            
+            --accent: #00f0ff; /* Neon cyan */
+            --accent-hover: #52f4ff;
+            --accent-2: #7000ff; /* Purple */
+            
+            --text-main: #f4f4f5;
+            --text-muted: #a1a1aa;
+            
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            
+            --font-main: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --radius: 12px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --glass-blur: blur(16px);
+        }
+
+        [data-theme="light"] {
+            /* Light Theme */
+            --bg-primary: #f8fafc;
+            --bg-secondary: #f1f5f9;
+            --bg-glass: rgba(255, 255, 255, 0.8);
+            --bg-card: #ffffff;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --border-glow: rgba(14, 165, 233, 0.2);
+            
+            --accent: #0ea5e9; /* Light blue */
+            --accent-hover: #0284c7;
+            --accent-2: #8b5cf6;
+            
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 90px;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Abstract Background Effect */
+        .bg-mesh {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 15% 50%, rgba(0, 240, 255, 0.05), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(112, 0, 255, 0.05), transparent 25%);
+            pointer-events: none;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        a:hover {
+            color: var(--accent-hover);
+        }
+
+        ul { list-style: none; }
+        img, svg { max-width: 100%; height: auto; }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .section {
+            padding: 120px 0;
+            position: relative;
+        }
+
+        .bg-secondary {
+            background-color: var(--bg-secondary);
+        }
+
+        /* Typography */
+        .section-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--accent);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+        [data-theme="light"] .section-tag {
+            background: rgba(14, 165, 233, 0.1);
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin-bottom: 1rem;
+            color: var(--text-main);
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .section-subtitle {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            margin-bottom: 4rem;
+            max-width: 700px;
+        }
+
+        .text-center { text-align: center; margin-left: auto; margin-right: auto; }
+
+        /* ==========================================================================
+           Buttons
+           ========================================================================== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid transparent;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            z-index: -1;
+            transition: opacity 0.3s ease;
+            opacity: 0;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: #000;
+        }
+        [data-theme="light"] .btn-primary { color: #fff; }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px var(--border-glow);
+        }
+        .btn-primary:hover::before { opacity: 1; }
+        [data-theme="light"] .btn-primary:hover::before { opacity: 0; background-color: var(--accent-hover); }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-main);
+            border-color: var(--border-color);
+        }
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background-color: rgba(0, 240, 255, 0.05);
+        }
+        [data-theme="light"] .btn-secondary:hover { background-color: rgba(14, 165, 233, 0.05); }
+
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        /* ==========================================================================
+           Navigation (Glassmorphism)
+           ========================================================================== */
+        header {
+            position: fixed;
+            top: 0; width: 100%;
+            height: 90px;
+            background-color: var(--bg-glass);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+            transition: height 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        header.scrolled {
+            height: 70px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+        }
+
+        .logo {
+            display: flex; align-items: center; gap: 12px;
+            font-size: 1.5rem; font-weight: 800;
+            color: var(--text-main);
+            letter-spacing: -0.5px;
+        }
+        .logo svg { width: 28px; height: 28px; stroke: var(--accent); }
+
+        .nav-right {
+            display: flex; align-items: center; gap: 30px;
+        }
+
+        .nav-links { display: flex; align-items: center; gap: 24px; }
+        .nav-links a:not(.btn) {
+            color: var(--text-muted);
+            font-size: 0.95rem; font-weight: 500;
+            position: relative;
+        }
+        .nav-links a:not(.btn):hover, .nav-links a:not(.btn).active {
+            color: var(--text-main);
+        }
+        .nav-links a:not(.btn)::after {
+            content: ''; position: absolute;
+            width: 0; height: 2px;
+            bottom: -6px; left: 0;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            transition: width 0.3s ease;
+        }
+        .nav-links a:not(.btn):hover::after, .nav-links a:not(.btn).active::after {
+            width: 100%;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 40px; height: 40px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            color: var(--text-main);
+            transition: var(--transition);
+        }
+        .theme-toggle:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        .theme-toggle svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; }
+        [data-theme="light"] .icon-moon { display: block; }
+        [data-theme="light"] .icon-sun { display: none; }
+        [data-theme="dark"] .icon-moon { display: none; }
+        [data-theme="dark"] .icon-sun { display: block; }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none; background: transparent; border: none;
+            cursor: pointer; width: 30px; height: 24px;
+            position: relative; z-index: 1001;
+        }
+        .hamburger, .hamburger::before, .hamburger::after {
+            content: ''; position: absolute; width: 100%; height: 2px;
+            background-color: var(--text-main); transition: var(--transition);
+        }
+        .hamburger { top: 50%; transform: translateY(-50%); }
+        .hamburger::before { top: -8px; left: 0; }
+        .hamburger::after { bottom: -8px; left: 0; }
+        .mobile-menu-btn.active .hamburger { background-color: transparent; }
+        .mobile-menu-btn.active .hamburger::before { transform: translateY(8px) rotate(45deg); }
+        .mobile-menu-btn.active .hamburger::after { transform: translateY(-8px) rotate(-45deg); }
+
+        /* ==========================================================================
+           Hero Section
+           ========================================================================== */
+        .hero {
+            min-height: 100vh;
+            display: flex; align-items: center;
+            padding-top: 90px;
+        }
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+        .hero-text h1 {
+            font-size: clamp(3rem, 6vw, 5rem);
+            line-height: 1.05;
+            margin-bottom: 24px;
+            background: linear-gradient(to right, var(--text-main), var(--text-muted));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-text h1 span {
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-text p {
+            font-size: 1.25rem; color: var(--text-muted);
+            margin-bottom: 40px; max-width: 500px;
+        }
+        .hero-actions { display: flex; gap: 20px; flex-wrap: wrap; }
+
+        /* Hero Animation */
+        .cyber-map {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1;
+            background: radial-gradient(circle, var(--bg-card) 0%, transparent 70%);
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 0 50px var(--border-glow);
+        }
+        .cyber-map::before {
+            content: ''; position: absolute;
+            width: 100%; height: 100%; border-radius: 50%;
+            border: 1px dashed var(--border-color);
+            animation: spin 30s linear infinite;
+        }
+        .cyber-map::after {
+            content: ''; position: absolute;
+            width: 60%; height: 60%; border-radius: 50%;
+            border: 1px solid var(--accent); opacity: 0.3;
+            animation: spin 15s linear infinite reverse;
+        }
+        .shield-core {
+            width: 30%; height: 30%;
+            background: var(--accent);
+            border-radius: 20%;
+            transform: rotate(45deg);
+            box-shadow: 0 0 30px var(--accent);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        .map-node {
+            position: absolute;
+            width: 12px; height: 12px;
+            background: var(--accent-2);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--accent-2);
+        }
+        .n1 { top: 20%; left: 30%; animation: blink 3s infinite; }
+        .n2 { top: 70%; left: 80%; animation: blink 4s infinite 1s; }
+        .n3 { top: 80%; left: 20%; animation: blink 2s infinite 0.5s; }
+        .n4 { top: 30%; left: 80%; animation: blink 3.5s infinite 2s; }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes pulse { 0%, 100% { transform: rotate(45deg) scale(1); } 50% { transform: rotate(45deg) scale(1.1); } }
+        @keyframes blink { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
+
+        /* ==========================================================================
+           Cards & Glassmorphism Panels
+           ========================================================================== */
+        .glass-panel {
+            background: var(--bg-card);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 40px;
+            transition: var(--transition);
+        }
+        .glass-panel:hover {
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px var(--border-glow);
+            transform: translateY(-5px);
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .icon-box {
+            width: 60px; height: 60px;
+            background: rgba(0, 240, 255, 0.1);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; color: var(--accent);
+            margin-bottom: 24px;
+        }
+        [data-theme="light"] .icon-box { background: rgba(14, 165, 233, 0.1); }
+
+        .glass-panel h3 { margin-bottom: 12px; font-size: 1.4rem; color: var(--text-main); }
+        .glass-panel p { color: var(--text-muted); }
+
+        /* ==========================================================================
+           Case Studies (New Feature)
+           ========================================================================== */
+        .case-studies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 30px;
+        }
+        .case-card {
+            position: relative;
+            overflow: hidden;
+        }
+        .case-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--accent-2);
+        }
+        .case-year {
+            font-family: monospace;
+            color: var(--accent-2);
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .case-takeaway {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px dashed var(--border-color);
+        }
+        .case-takeaway strong { color: var(--accent); display: block; margin-bottom: 4px; }
+
+        /* ==========================================================================
+           Interactive Password Checker (New Feature)
+           ========================================================================== */
+        .password-checker-container {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center;
+        }
+        .pwd-tool {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 30px;
+        }
+        .pwd-input-group { position: relative; margin-bottom: 20px; }
+        .pwd-input {
+            width: 100%;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 16px 20px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-family: monospace;
+            outline: none;
+            transition: var(--transition);
+        }
+        .pwd-input:focus { border-color: var(--accent); box-shadow: 0 0 15px var(--border-glow); }
+        
+        .strength-meter {
+            height: 6px;
+            background: var(--bg-secondary);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        .strength-fill {
+            height: 100%; width: 0%;
+            background: var(--error);
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+        .strength-text { font-size: 0.9rem; font-weight: 600; text-align: right; }
+        .req-list { margin-top: 20px; font-size: 0.9rem; color: var(--text-muted); }
+        .req-list li { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+        .req-icon { width: 16px; height: 16px; border-radius: 50%; border: 1px solid var(--text-muted); display: flex; justify-content: center; align-items: center; font-size: 10px;}
+        .req-met .req-icon { background: var(--success); border-color: var(--success); color: #fff; }
+        .req-met { color: var(--text-main); }
+
+        /* ==========================================================================
+           Threats Layout
+           ========================================================================== */
+        .threat-details ul { padding-left: 20px; margin-top: 10px; color: var(--text-muted); }
+        .threat-details li { margin-bottom: 8px; }
+        .action-text { color: var(--accent); font-weight: 600; margin-top: 15px; display: inline-block; padding: 8px 16px; background: rgba(0, 240, 255, 0.05); border-radius: 6px; border-left: 3px solid var(--accent); }
+        [data-theme="light"] .action-text { background: rgba(14, 165, 233, 0.05); }
+
+        /* ==========================================================================
+           Checklist
+           ========================================================================== */
+        .checklist-container { max-width: 800px; margin: 0 auto; }
+        .progress-bar-container { margin-bottom: 30px; }
+        .progress-text { display: flex; justify-content: space-between; margin-bottom: 12px; font-weight: 600; }
+        .progress-track { width: 100%; height: 8px; background: var(--bg-secondary); border-radius: 4px; overflow: hidden; }
+        .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        .check-item {
+            display: flex; align-items: center; gap: 16px;
+            padding: 16px 20px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            margin-bottom: 12px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: var(--transition);
+        }
+        .check-item:hover { border-color: var(--border-color); background: var(--bg-card); }
+        .check-item input { display: none; }
+        .custom-check {
+            width: 24px; height: 24px;
+            border: 2px solid var(--text-muted);
+            border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            transition: var(--transition);
+        }
+        .check-item input:checked + .custom-check {
+            background: var(--accent); border-color: var(--accent);
+        }
+        .check-item input:checked + .custom-check::after {
+            content: '✓'; color: #000; font-weight: bold;
+        }
+        [data-theme="light"] .check-item input:checked + .custom-check::after { color: #fff; }
+        .check-item input:checked ~ span { color: var(--text-main); }
+        .success-message { margin-top: 24px; padding: 20px; background: rgba(16, 185, 129, 0.1); border-left: 4px solid var(--success); color: var(--success); border-radius: 0 var(--radius) var(--radius) 0; }
+        .hidden { display: none !important; }
+
+        /* ==========================================================================
+           Quiz
+           ========================================================================== */
+        .quiz-container { max-width: 800px; margin: 0 auto; min-height: 450px; display: flex; flex-direction: column; justify-content: center; }
+        .quiz-step { animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .quiz-header { display: flex; justify-content: space-between; margin-bottom: 24px; font-size: 0.95rem; color: var(--accent); font-weight: 600; }
+        #question-text { font-size: 1.4rem; margin-bottom: 30px; line-height: 1.5; color: var(--text-main); }
+        
+        .options-container { display: flex; flex-direction: column; gap: 16px; margin-bottom: 30px; }
+        .quiz-option {
+            padding: 16px 24px; background: var(--bg-secondary);
+            border: 1px solid var(--border-color); border-radius: 8px;
+            cursor: pointer; transition: var(--transition);
+            display: flex; align-items: center; font-size: 1.05rem;
+        }
+        .quiz-option:hover { border-color: var(--accent); background: rgba(0, 240, 255, 0.05); }
+        [data-theme="light"] .quiz-option:hover { background: rgba(14, 165, 233, 0.05); }
+        .quiz-option.selected { border-color: var(--accent); background: rgba(0, 240, 255, 0.1); box-shadow: 0 0 15px var(--border-glow); }
+        [data-theme="light"] .quiz-option.selected { background: rgba(14, 165, 233, 0.1); }
+        
+        .quiz-actions { display: flex; justify-content: flex-end; }
+        
+        /* Quiz Results */
+        .score-circle {
+            width: 160px; height: 160px; border-radius: 50%;
+            border: 8px solid var(--accent);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 3rem; font-weight: 800; margin: 0 auto 24px;
+            box-shadow: 0 0 30px var(--border-glow);
+        }
+        .score-stats { display: flex; justify-content: center; gap: 40px; margin-bottom: 40px; font-size: 1.1rem; }
+        .text-success { color: var(--success); }
+        .text-error { color: var(--error); }
+        .text-warning { color: var(--warning); }
+        
+        .review-item { background: var(--bg-secondary); padding: 24px; border-radius: var(--radius); margin-bottom: 16px; text-align: left; border-left: 4px solid transparent; }
+        .review-item.correct { border-left-color: var(--success); }
+        .review-item.incorrect { border-left-color: var(--error); }
+        .review-q { font-weight: 600; margin-bottom: 12px; font-size: 1.1rem; }
+        .review-ans { font-size: 1rem; margin-bottom: 12px; font-weight: 500; }
+        .review-exp { font-size: 0.95rem; color: var(--text-muted); background: var(--bg-primary); padding: 12px; border-radius: 6px; }
+
+        /* ==========================================================================
+           Footer
+           ========================================================================== */
+        footer { border-top: 1px solid var(--border-color); padding: 80px 0 20px; background: var(--bg-secondary); }
+        .footer-content { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; margin-bottom: 60px; }
+        .footer-links h4 { margin-bottom: 24px; color: var(--text-main); font-size: 1.1rem; }
+        .footer-links ul { display: flex; flex-direction: column; gap: 12px; }
+        .footer-links a { color: var(--text-muted); }
+        .footer-links a:hover { color: var(--accent); }
+        .footer-bottom { text-align: center; color: var(--text-muted); font-size: 0.9rem; padding-top: 20px; border-top: 1px solid var(--border-color); }
+
+        /* ==========================================================================
+           Responsive Design
+           ========================================================================== */
+        @media (max-width: 992px) {
+            .hero-content, .password-checker-container { grid-template-columns: 1fr; }
+            .hero-text { text-align: center; }
+            .hero-text p { margin-left: auto; margin-right: auto; }
+            .hero-actions { justify-content: center; }
+            .cyber-map { max-width: 400px; margin: 0 auto; }
+            .footer-content { grid-template-columns: 1fr; text-align: center; }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn { display: block; }
+            .nav-right { gap: 15px; }
+            .nav-links {
+                position: fixed; top: 90px; left: -100%; width: 100%; height: calc(100vh - 90px);
+                background: var(--bg-glass); backdrop-filter: var(--glass-blur);
+                flex-direction: column; justify-content: center;
+                transition: var(--transition); border-top: 1px solid var(--border-color);
+            }
+            .nav-links.active { left: 0; }
+            header.scrolled .nav-links { top: 70px; height: calc(100vh - 70px); }
+            .section { padding: 80px 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-mesh"></div>
+
+    <header id="navbar">
+        <div class="container nav-container">
+            <a href="#home" class="logo">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    <rect x="9" y="11" width="6" height="4" rx="1"></rect>
+                    <path d="M10 11V9a2 2 0 0 1 4 0v2"></path>
+                </svg>
+                CyberSafe<span style="color:var(--accent)">Pro</span>
+            </a>
+            
+            <div class="nav-right">
+                <nav class="nav-links">
+                    <a href="#home" class="nav-item active">Home</a>
+                    <a href="#threats" class="nav-item">Threats</a>
+                    <a href="#passwords" class="nav-item">Passwords</a>
+                    <a href="#casestudies" class="nav-item">Incidents</a>
+                    <a href="#checklist" class="nav-item">Checklist</a>
+                    <a href="#quiz" class="btn btn-primary nav-btn">Take Quiz</a>
+                </nav>
+                
+                <button class="theme-toggle" id="theme-toggle" aria-label="Toggle Dark Mode">
+                    <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                    <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                </button>
+
+                <button class="mobile-menu-btn" aria-label="Toggle Navigation">
+                    <span class="hamburger"></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="container hero-content">
+                <div class="hero-text">
+                    <span class="section-tag">Version 2.0</span>
+                    <h1>Stay Smart. <br><span>Stay Secure.</span></h1>
+                    <p>Upgrade your digital defense. Learn to recognize threats, secure your accounts with advanced tools, and explore real-world cyber incidents.</p>
+                    <div class="hero-actions">
+                        <a href="#threats" class="btn btn-primary">Explore Threats</a>
+                        <a href="#passwords" class="btn btn-secondary">Check Password</a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="cyber-map">
+                        <div class="shield-core"></div>
+                        <div class="map-node n1"></div>
+                        <div class="map-node n2"></div>
+                        <div class="map-node n3"></div>
+                        <div class="map-node n4"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Overview -->
+        <section id="features" class="section bg-secondary">
+            <div class="container">
+                <div class="text-center">
+                    <span class="section-tag">Essentials</span>
+                    <h2 class="section-title">Your Digital Safety Foundation</h2>
+                    <p class="section-subtitle">Understanding cybersecurity is essential in our everyday online activities.</p>
+                </div>
+                
+                <div class="card-grid">
+                    <div class="glass-panel">
+                        <div class="icon-box">⚠️</div>
+                        <h3>Recognize Threats</h3>
+                        <p>Learn to spot phishing, malware, and deceptive messages before they compromise your data.</p>
+                    </div>
+                    <div class="glass-panel">
+                        <div class="icon-box">🔒</div>
+                        <h3>Zero-Trust Security</h3>
+                        <p>Secure your personal information with strong passphrases and multi-factor authentication (MFA).</p>
+                    </div>
+                    <div class="glass-panel">
+                        <div class="icon-box">🌐</div>
+                        <h3>Data Privacy</h3>
+                        <p>Navigate the web and social media safely by controlling your digital footprint and privacy settings.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cyber Threats Section -->
+        <section id="threats" class="section">
+            <div class="container">
+                <div class="text-center">
+                    <span class="section-tag">Vulnerabilities</span>
+                    <h2 class="section-title">Common Cyber Threats</h2>
+                    <p class="section-subtitle">The first step to defense is knowing your enemy.</p>
+                </div>
+                
+                <div class="card-grid">
+                    <div class="glass-panel threat-card">
+                        <h3>🎣 Phishing</h3>
+                        <p>Deceptive messages or websites designed to trick people into revealing sensitive information.</p>
+                        <div class="threat-details">
+                            <ul>
+                                <li>Urgent threats or unusual rewards.</li>
+                                <li>Suspicious sender addresses.</li>
+                            </ul>
+                            <span class="action-text">Verify requests independently.</span>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-panel threat-card">
+                        <h3>🦠 Ransomware & Malware</h3>
+                        <p>Malicious software that encrypts your files or harms your device, often demanding payment.</p>
+                        <div class="threat-details">
+                            <ul>
+                                <li>Unverified downloads.</li>
+                                <li>Outdated software systems.</li>
+                            </ul>
+                            <span class="action-text">Keep offline backups & update OS.</span>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-panel threat-card">
+                        <h3>🗣️ Social Engineering</h3>
+                        <p>Attackers manipulating human psychology to bypass technical security controls.</p>
+                        <div class="threat-details">
+                            <ul>
+                                <li>Fake IT support calls.</li>
+                                <li>Impersonating trusted authorities.</li>
+                            </ul>
+                            <span class="action-text">Never share OTPs blindly.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Password Checker -->
+        <section id="passwords" class="section bg-secondary">
+            <div class="container">
+                <div class="password-checker-container">
+                    <div>
+                        <span class="section-tag">Interactive Tool</span>
+                        <h2 class="section-title" style="text-align: left; font-size: 2.5rem;">Test Your Password Strength</h2>
+                        <p style="color: var(--text-muted); margin-bottom: 20px;">
+                            A strong password is your first line of defense. Use our local tool to see how resilient your password is against brute-force attacks. 
+                        </p>
+                        <p style="color: var(--warning); font-size: 0.9rem; margin-bottom: 30px;">
+                            <em>Privacy Note: This runs entirely in your browser. Nothing you type is sent to a server.</em>
+                        </p>
+                        
+                        <div class="glass-panel" style="padding: 24px; background: rgba(0, 240, 255, 0.05); border-color: var(--accent);">
+                            <h4 style="color: var(--text-main); margin-bottom: 10px;">Best Practices</h4>
+                            <ul style="color: var(--text-muted); font-size: 0.95rem; padding-left: 20px;">
+                                <li style="margin-bottom: 8px;">Use a unique passphrase for every account.</li>
+                                <li style="margin-bottom: 8px;">Enable Multi-Factor Authentication (MFA).</li>
+                                <li>Use a reputable Password Manager.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="pwd-tool">
+                        <div class="pwd-input-group">
+                            <input type="text" id="pwd-input" class="pwd-input" placeholder="Type a password to test..." autocomplete="off">
+                        </div>
+                        
+                        <div class="strength-meter">
+                            <div class="strength-fill" id="strength-fill"></div>
+                        </div>
+                        <div class="strength-text" id="strength-text" style="color: var(--text-muted);">Too Short</div>
+                        
+                        <ul class="req-list">
+                            <li id="req-length"><span class="req-icon"></span> At least 12 characters</li>
+                            <li id="req-upper"><span class="req-icon"></span> Contains uppercase letter</li>
+                            <li id="req-number"><span class="req-icon"></span> Contains a number</li>
+                            <li id="req-symbol"><span class="req-icon"></span> Contains a special symbol</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Real World Case Studies -->
+        <section id="casestudies" class="section">
+            <div class="container">
+                <div class="text-center">
+                    <span class="section-tag">History</span>
+                    <h2 class="section-title">Real-World Cyber Incidents</h2>
+                    <p class="section-subtitle">Learning from major historical breaches to understand why security matters.</p>
+                </div>
+                
+                <div class="case-studies-grid">
+                    <div class="glass-panel case-card">
+                        <span class="case-year">May 2017</span>
+                        <h3>WannaCry Ransomware</h3>
+                        <p>A worldwide cyberattack targeting computers running the Microsoft Windows OS. It encrypted data and demanded ransom payments in Bitcoin. It heavily impacted the UK's NHS and FedEx.</p>
+                        <div class="case-takeaway">
+                            <strong>The Lesson:</strong>
+                            Always keep operating systems updated. WannaCry exploited a vulnerability (EternalBlue) that had a patch released months prior.
+                        </div>
+                    </div>
+                    
+                    <div class="glass-panel case-card">
+                        <span class="case-year">September 2017</span>
+                        <h3>Equifax Data Breach</h3>
+                        <p>Hackers stole the personal data—including Social Security numbers, birth dates, and addresses—of 147 million people from the credit reporting agency.</p>
+                        <div class="case-takeaway">
+                            <strong>The Lesson:</strong>
+                            Third-party software vulnerabilities are dangerous. The breach occurred due to an unpatched vulnerability in the Apache Struts web framework.
+                        </div>
+                    </div>
+                    
+                    <div class="glass-panel case-card">
+                        <span class="case-year">December 2013</span>
+                        <h3>Target Corporation Breach</h3>
+                        <p>Attackers compromised 40 million credit and debit card accounts. The hackers gained access to Target's network by using credentials stolen from a third-party HVAC vendor.</p>
+                        <div class="case-takeaway">
+                            <strong>The Lesson:</strong>
+                            Implement strict access controls and Zero-Trust architecture. Vendors should not have access to sensitive network segments.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Safety Checklist Section -->
+        <section id="checklist" class="section bg-secondary">
+            <div class="container">
+                <div class="text-center">
+                    <span class="section-tag">Action Plan</span>
+                    <h2 class="section-title">Cyber Security Audit</h2>
+                    <p class="section-subtitle">Review these practical actions to harden your personal digital infrastructure.</p>
+                </div>
+                
+                <div class="checklist-container glass-panel">
+                    <div class="progress-bar-container">
+                        <div class="progress-text">
+                            <span>Audit Progress</span>
+                            <span style="color: var(--accent);"><span id="progress-count">0</span> / 10 (<span id="progress-percent">0%</span>)</span>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-fill" id="progress-fill"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="checklist-items" id="checklist-items">
+                        <label class="check-item"><input type="checkbox"><span class="custom-check"></span> <span>I use unique passwords generated by a password manager.</span></label>
+                        <label class="check-item"><input type="checkbox"><span class="custom-check"></span> <span>I have enabled MFA/2FA on email, banking, and social accounts.</span></label>
+                        <label class="check-item"><input type="checkbox"><span class="custom-check"></span> <span>I verify the actual URL of a website before entering credentials.</span></label>
+                        <label class="check-item"><input type="checkbox"><span class="custom-check"></span> <span>I never share OTPs (One Time Passwords) via phone or chat.</span></label>
+                        <label class="check-item"><input type="checkbox"><span class="custom-check"></span> <span>My social media profiles are set to private where appropriate.</span></label>
+                        <label class="check-item"><input type="checkbox"><span class="custom-check"></span> <span>I only download software from official vendor websites or app stores.</span></label>
+                        <label class="check-item"><input type="checkbox"><span class="custom-check"></span> <span>Automatic updates are enabled for my OS and web browser.</span></label>
+                        <label class="check-item"><input type="checkbox"><span class="custom-check"></span> <span>I use a VPN when connected to untrusted public Wi-Fi networks.</span></label>
+                        <label class="check-item"><input type="checkbox"><span class="custom-check"></span> <span>I know how to freeze my credit or report identity theft.</span></label>
+                        <label class="check-item"><input type="checkbox"><span class="custom-check"></span> <span>I routinely backup my most critical data to an offline drive or cloud.</span></label>
+                    </div>
+                    
+                    <div style="margin-top: 30px; text-align: right;">
+                        <button id="reset-checklist" class="btn btn-secondary">Reset Audit</button>
+                    </div>
+                    <div id="checklist-success" class="success-message hidden">
+                        <strong>System Secured!</strong> You are implementing strong practices to protect your digital life.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz Section -->
+        <section id="quiz" class="section">
+            <div class="container">
+                <div class="text-center">
+                    <span class="section-tag">Evaluation</span>
+                    <h2 class="section-title">Certification Quiz</h2>
+                    <p class="section-subtitle">Test your knowledge against advanced threat scenarios.</p>
+                </div>
+                
+                <div class="quiz-container glass-panel">
+                    <div id="quiz-intro" class="quiz-step active text-center">
+                        <h3 style="font-size: 2rem; margin-bottom: 20px;">Ready to certify your knowledge?</h3>
+                        <p style="color: var(--text-muted); margin-bottom: 30px;">This 5-question evaluation covers passwords, phishing, and real-world incidents.</p>
+                        <button id="start-quiz" class="btn btn-primary">Initiate Evaluation</button>
+                    </div>
+                    
+                    <div id="quiz-questions" class="quiz-step hidden">
+                        <div class="quiz-header">
+                            <span id="question-counter">Question 1 of 5</span>
+                            <span style="color: var(--text-muted);">CyberSafe Evaluation</span>
+                        </div>
+                        <h3 id="question-text">Question text goes here?</h3>
+                        <div class="options-container" id="options-container">
+                            <!-- Options injected by JS -->
+                        </div>
+                        <div class="quiz-actions">
+                            <button id="next-btn" class="btn btn-primary" disabled>Next Parameter</button>
+                        </div>
+                    </div>
+                    
+                    <div id="quiz-results" class="quiz-step hidden">
+                        <h3 style="font-size: 2rem; margin-bottom: 30px;">Evaluation Complete</h3>
+                        <div class="score-circle">
+                            <span id="score-percent">0%</span>
+                        </div>
+                        <div class="score-stats">
+                            <p>Score: <strong id="score-correct" class="text-success">0</strong> / 5</p>
+                            <p id="score-feedback">Processing...</p>
+                        </div>
+                        
+                        <div class="review-section">
+                            <h4 style="margin-bottom: 20px; font-size: 1.2rem;">Post-Incident Review</h4>
+                            <div id="review-container">
+                                <!-- Review injected by JS -->
+                            </div>
+                        </div>
+                        
+                        <div style="text-align: center; margin-top: 30px;">
+                            <button id="retry-btn" class="btn btn-primary">Recalibrate & Retry</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <div class="logo" style="margin-bottom: 16px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        <rect x="9" y="11" width="6" height="4" rx="1"></rect>
+                        <path d="M10 11V9a2 2 0 0 1 4 0v2"></path>
+                    </svg>
+                    CyberSafe<span style="color:var(--accent)">Pro</span>
+                </div>
+                <p style="color: var(--text-muted);">Advanced educational platform for modern digital survival.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Navigation</h4>
+                <ul>
+                    <li><a href="#home">Dashboard</a></li>
+                    <li><a href="#threats">Threat Intel</a></li>
+                    <li><a href="#casestudies">Case Studies</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="https://www.cybercrime.gov.in/" target="_blank">Cyber Crime Portal (India)</a></li>
+                    <li><a href="https://www.cert-in.org.in/" target="_blank">CERT-In</a></li>
+                    <li><a href="https://www.cisa.gov/" target="_blank">CISA (US)</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <p>&copy; 2026 CyberSafe Pro Educational Project. Designed for BTech CSE Demonstration.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            /* ==========================================================================
+               Theme Toggle Logic
+               ========================================================================== */
+            const themeBtn = document.getElementById('theme-toggle');
+            const htmlEl = document.documentElement;
+            
+            // Check for saved theme or system preference
+            const savedTheme = localStorage.getItem('cybersafe-theme');
+            if (savedTheme) {
+                htmlEl.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+                htmlEl.setAttribute('data-theme', 'light');
+            }
+
+            themeBtn.addEventListener('click', () => {
+                const currentTheme = htmlEl.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                htmlEl.setAttribute('data-theme', newTheme);
+                localStorage.setItem('cybersafe-theme', newTheme);
+            });
+
+            /* ==========================================================================
+               Navigation & Mobile Menu & Scroll Spy
+               ========================================================================== */
+            const navbar = document.getElementById('navbar');
+            const mobileBtn = document.querySelector('.mobile-menu-btn');
+            const navLinks = document.querySelector('.nav-links');
+            const navItems = document.querySelectorAll('.nav-item');
+            const sections = document.querySelectorAll('section');
+
+            window.addEventListener('scroll', () => {
+                // Sticky Header
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+
+                // Scroll Spy
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (scrollY >= (sectionTop - 150)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navItems.forEach(a => {
+                    a.classList.remove('active');
+                    if (a.getAttribute('href').includes(current)) {
+                        a.classList.add('active');
+                    }
+                });
+            });
+
+            mobileBtn.addEventListener('click', () => {
+                mobileBtn.classList.toggle('active');
+                navLinks.classList.toggle('active');
+            });
+
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    mobileBtn.classList.remove('active');
+                    navLinks.classList.remove('active');
+                });
+            });
+
+            /* ==========================================================================
+               Password Strength Checker
+               ========================================================================== */
+            const pwdInput = document.getElementById('pwd-input');
+            const strFill = document.getElementById('strength-fill');
+            const strText = document.getElementById('strength-text');
+            
+            const reqLen = document.getElementById('req-length');
+            const reqUp = document.getElementById('req-upper');
+            const reqNum = document.getElementById('req-number');
+            const reqSym = document.getElementById('req-symbol');
+
+            pwdInput.addEventListener('input', (e) => {
+                const val = e.target.value;
+                let score = 0;
+
+                // Reset classes
+                reqLen.classList.remove('req-met');
+                reqUp.classList.remove('req-met');
+                reqNum.classList.remove('req-met');
+                reqSym.classList.remove('req-met');
+
+                if (val.length >= 12) { score += 25; reqLen.classList.add('req-met'); }
+                else if (val.length >= 8) { score += 10; } // Partial credit
+
+                if (/[A-Z]/.test(val)) { score += 25; reqUp.classList.add('req-met'); }
+                if (/[0-9]/.test(val)) { score += 25; reqNum.classList.add('req-met'); }
+                if (/[^A-Za-z0-9]/.test(val)) { score += 25; reqSym.classList.add('req-met'); }
+
+                // Visual updates
+                strFill.style.width = `${Math.min(score, 100)}%`;
+                
+                if (val.length === 0) {
+                    strFill.style.width = '0%';
+                    strText.textContent = 'None';
+                    strFill.style.backgroundColor = 'var(--error)';
+                    strText.style.color = 'var(--text-muted)';
+                } else if (score < 50) {
+                    strFill.style.backgroundColor = 'var(--error)';
+                    strText.textContent = 'Weak';
+                    strText.style.color = 'var(--error)';
+                } else if (score < 80) {
+                    strFill.style.backgroundColor = 'var(--warning)';
+                    strText.textContent = 'Moderate';
+                    strText.style.color = 'var(--warning)';
+                } else {
+                    strFill.style.backgroundColor = 'var(--success)';
+                    strText.textContent = 'Strong';
+                    strText.style.color = 'var(--success)';
+                }
+            });
+
+
+            /* ==========================================================================
+               Cyber Safety Checklist
+               ========================================================================== */
+            const checkboxes = document.querySelectorAll('.check-item input[type="checkbox"]');
+            const progressPercent = document.getElementById('progress-percent');
+            const progressCount = document.getElementById('progress-count');
+            const progressFill = document.getElementById('progress-fill');
+            const resetButton = document.getElementById('reset-checklist');
+            const successMessage = document.getElementById('checklist-success');
+            const totalItems = checkboxes.length;
+
+            function updateChecklistProgress() {
+                const checkedCount = document.querySelectorAll('.check-item input[type="checkbox"]:checked').length;
+                const percentage = Math.round((checkedCount / totalItems) * 100);
+                
+                progressCount.textContent = checkedCount;
+                progressPercent.textContent = `${percentage}%`;
+                progressFill.style.width = `${percentage}%`;
+
+                if (checkedCount === totalItems) {
+                    successMessage.classList.remove('hidden');
+                } else {
+                    successMessage.classList.add('hidden');
+                }
+            }
+
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateChecklistProgress);
+            });
+
+            resetButton.addEventListener('click', () => {
+                checkboxes.forEach(cb => cb.checked = false);
+                updateChecklistProgress();
+            });
+
+
+            /* ==========================================================================
+               Interactive Quiz (Updated for v2)
+               ========================================================================== */
+            const quizData = [
+                {
+                    question: "Based on the Target data breach (2013), what is a critical architectural security practice?",
+                    options: [
+                        "Buying more antivirus software.",
+                        "Isolating third-party vendor access from sensitive network segments (Zero-Trust).",
+                        "Changing all employee passwords every week.",
+                        "Stopping the use of credit cards in stores."
+                    ],
+                    correct: 1,
+                    explanation: "Implementing network segmentation and strict access controls prevents attackers who compromise a third-party vendor from reaching core financial systems."
+                },
+                {
+                    question: "How did the WannaCry ransomware spread so rapidly worldwide?",
+                    options: [
+                        "Through infected USB drives dropped in parking lots.",
+                        "By exploiting an unpatched vulnerability in the Windows operating system.",
+                        "By tricking users into downloading fake antivirus apps on their phones.",
+                        "By guessing simple passwords on routers."
+                    ],
+                    correct: 1,
+                    explanation: "WannaCry utilized the EternalBlue exploit. Systems that had applied the Microsoft security patch released months prior were immune."
+                },
+                {
+                    question: "A service you use emails you: 'Your account has been compromised. Reply with your password to verify your identity.' This is:",
+                    options: [
+                        "Standard operating procedure for most banks.",
+                        "A social engineering/phishing attempt.",
+                        "A multifactor authentication check.",
+                        "A sign you have malware on your phone."
+                    ],
+                    correct: 1,
+                    explanation: "Legitimate organizations will NEVER ask you to reply with your password. This is a classic phishing attempt."
+                },
+                {
+                    question: "Why is a 16-character passphrase (e.g., 'Blue$Coffee!Dragon#92') generally better than an 8-character complex password (e.g., 'P@$$w0rd')?",
+                    options: [
+                        "It's easier for the computer to process.",
+                        "Length exponentially increases the time required for brute-force cracking algorithms to succeed.",
+                        "Shorter passwords can't use special characters.",
+                        "It forces you to write it down."
+                    ],
+                    correct: 1,
+                    explanation: "In cryptography, length often provides more mathematical entropy than complexity alone, making it mathematically unfeasible to crack in a reasonable timeframe."
+                },
+                {
+                    question: "What was the root cause of the Equifax data breach that affected 147 million people?",
+                    options: [
+                        "An employee fell for a phishing email.",
+                        "Physical servers were stolen from a data center.",
+                        "Failure to patch a known vulnerability in a third-party web framework (Apache Struts).",
+                        "An insider threat leaked the database."
+                    ],
+                    correct: 2,
+                    explanation: "The breach highlighted the critical importance of vulnerability management and promptly applying security patches to all software components."
+                }
+            ];
+
+            let currentQuestion = 0;
+            let score = 0;
+            let userAnswers = new Array(quizData.length).fill(null);
+
+            const quizIntro = document.getElementById('quiz-intro');
+            const quizQuestions = document.getElementById('quiz-questions');
+            const quizResults = document.getElementById('quiz-results');
+            
+            const startBtn = document.getElementById('start-quiz');
+            const nextBtn = document.getElementById('next-btn');
+            const retryBtn = document.getElementById('retry-btn');
+            
+            const questionCounter = document.getElementById('question-counter');
+            const questionText = document.getElementById('question-text');
+            const optionsContainer = document.getElementById('options-container');
+
+            startBtn.addEventListener('click', startQuiz);
+            nextBtn.addEventListener('click', nextQuestion);
+            retryBtn.addEventListener('click', resetQuiz);
+
+            function startQuiz() {
+                quizIntro.classList.add('hidden');
+                quizQuestions.classList.remove('hidden');
+                currentQuestion = 0; score = 0; userAnswers.fill(null);
+                loadQuestion();
+            }
+
+            function loadQuestion() {
+                const qData = quizData[currentQuestion];
+                questionCounter.textContent = `Question ${currentQuestion + 1} of ${quizData.length}`;
+                questionText.textContent = qData.question;
+                
+                optionsContainer.innerHTML = '';
+                nextBtn.disabled = true;
+
+                qData.options.forEach((option, index) => {
+                    const optDiv = document.createElement('div');
+                    optDiv.className = 'quiz-option';
+                    optDiv.textContent = option;
+                    
+                    optDiv.addEventListener('click', () => {
+                        document.querySelectorAll('.quiz-option').forEach(el => el.classList.remove('selected'));
+                        optDiv.classList.add('selected');
+                        userAnswers[currentQuestion] = index;
+                        nextBtn.disabled = false;
+                    });
+                    optionsContainer.appendChild(optDiv);
+                });
+                
+                nextBtn.textContent = (currentQuestion === quizData.length - 1) ? 'Finalize Evaluation' : 'Next Parameter';
+            }
+
+            function nextQuestion() {
+                if (userAnswers[currentQuestion] === quizData[currentQuestion].correct) score++;
+                currentQuestion++;
+                if (currentQuestion < quizData.length) loadQuestion();
+                else showResults();
+            }
+
+            function showResults() {
+                quizQuestions.classList.add('hidden');
+                quizResults.classList.remove('hidden');
+                
+                const percent = Math.round((score / quizData.length) * 100);
+                document.getElementById('score-percent').textContent = `${percent}%`;
+                document.getElementById('score-correct').textContent = score;
+                
+                const feedback = document.getElementById('score-feedback');
+                if (percent === 100) {
+                    feedback.textContent = "Security Clearance: Elite.";
+                    feedback.className = "text-success";
+                } else if (percent >= 60) {
+                    feedback.textContent = "Security Clearance: Approved. Good awareness.";
+                    feedback.className = "text-warning";
+                } else {
+                    feedback.textContent = "Security Clearance: Denied. Mandatory retraining required.";
+                    feedback.className = "text-error";
+                }
+                
+                const reviewContainer = document.getElementById('review-container');
+                reviewContainer.innerHTML = '';
+                
+                quizData.forEach((q, index) => {
+                    const reviewDiv = document.createElement('div');
+                    const isCorrect = userAnswers[index] === q.correct;
+                    reviewDiv.className = `review-item ${isCorrect ? 'correct' : 'incorrect'}`;
+                    
+                    const icon = isCorrect ? '✓' : '✗';
+                    
+                    reviewDiv.innerHTML = `
+                        <div class="review-q">${index + 1}. ${q.question}</div>
+                        <div class="review-ans" style="color: var(--${isCorrect ? 'success' : 'error'})">
+                            ${icon} Your Answer: ${q.options[userAnswers[index]]}
+                        </div>
+                        <div class="review-exp"><strong>Debrief:</strong> ${q.explanation}</div>
+                    `;
+                    reviewContainer.appendChild(reviewDiv);
+                });
+            }
+
+            function resetQuiz() {
+                quizResults.classList.add('hidden');
+                startQuiz();
+            }
+        });
+    </script>
+</body>
+</html>
